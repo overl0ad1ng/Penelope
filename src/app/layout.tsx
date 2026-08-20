@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Cinzel, Geist, Geist_Mono } from "next/font/google";
+import { Cinzel, Noto_Sans } from "next/font/google";
 import "./globals.css";
+import { config } from "@/lib/config";
+import Footer from "@/ui/Footer";
+import Header from "@/ui/Header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const notoSans = Noto_Sans({
+  variable: "--font-noto-sans",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "600", "800"],
 });
 
 const cinzel = Cinzel({
@@ -19,18 +18,21 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
-  title: "Penelope · 珀涅罗珀 — 像素织机",
-  description:
-    "一款在线的《我的世界》地图画生成网站：将图片依照特定的宽高比与方块材质，织成可以在原版《我的世界》中逐块放置实现的地图画作品。",
+  title: `${config.title} · Ten3b`,
+  description: config.description,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-CN"
-      className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} h-full antialiased`}
+      className={`${notoSans.variable} ${cinzel.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -3,16 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "pnpm run build:wasm && next dev",
+    "build": "pnpm run build:wasm && next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "build:wasm": "pnpm --filter penelope-resize run build:wasm"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "classnames": "^2.5.1",
+    "minecraft-ui": "workspace:*",
     "next": "16.3.1",
+    "prop-types": "^15.8.1",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-popper": "^2.3.0",
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",

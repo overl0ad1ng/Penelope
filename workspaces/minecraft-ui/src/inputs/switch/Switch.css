@@ -1,0 +1,85 @@
+:root {
+  --switch-bg-color: var(--midground-color);
+  --switch-bg-checked-color: var(--primary-color);
+  --switch-bg-checked-hover-color: var(--primary-color-hover);
+  --switch-text-color: var(--text-color);
+  --switch-text-color-30: rgba(255, 255, 255, 0.3);
+  --switch-border-color: var(--primary-border-color);
+  --switch-text-hover-color: var(--text-color);
+  --switch-text-hover-color-30: var(--foreground-color);
+}
+
+.Switch {
+  width: 40px;
+  height: 20px;
+  background-color: transparent;
+  color: transparent;
+  position: relative;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.Switch:focus:not(:active) {
+  box-shadow: 0 0 0px 1px var(--switch-bg-color),
+    0 0 0 2px var(--switch-text-color);
+}
+
+.Switch:before,
+.Switch:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  transform: translate3d(-50%, -50%, 0);
+}
+.Switch:before {
+  width: 40px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  background-color: var(--text-color-invert);
+  box-shadow: var(--bezel-invent);
+}
+
+.Switch:after {
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 2px;
+  content: "0";
+  transform: translate3d(0, calc(-50% - 2px), 0);
+
+  background-color: var(--switch-text-hover-color);
+  text-align: center;
+  vertical-align: middle;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  border-top-color: transparent;
+  --switch-border-color: var(--midground-color);
+  border-bottom-color: var(--switch-border-color);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  box-shadow: var(--bezel);
+}
+
+.Switch:checked:after {
+  transform: translate3d(calc(100% - 1px), calc(-50% - 2px), 0);
+  background-color: var(--switch-bg-checked-color);
+  --switch-border-color: var(--primary-border-color);
+  border-width: 0 0 2px 0;
+  box-shadow: var(--bezel);
+}
+
+.Switch:hover:before {
+  background-color: var(--switch-text-hover-color-30);
+}
+
+.Switch[readonly],
+.Switch[disabled] {
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.Switch[disabled] {
+  opacity: 0.5;
+}

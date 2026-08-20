@@ -1,0 +1,29 @@
+.Input {
+  --input-background-color: var(--midground-color);
+  padding: 6px 12px;
+  background-color: var(--input-background-color);
+  color: var(--text-color);
+  font-family: Minecraft, Minercraftory;
+  font-size: 1rem;
+  line-height: 1.5;
+  border: none;
+  box-sizing: border-box;
+  box-shadow: var(--bezel-invert);
+}
+
+.Input::placeholder {
+  opacity: 0.6;
+}
+
+.Input:focus {
+  outline: none;
+}
+
+.Input[readonly],
+.Input[disabled] {
+  pointer-events: none;
+}
+
+.Input[disabled] {
+  opacity: 0.5;
+}

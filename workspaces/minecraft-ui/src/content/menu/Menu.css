@@ -1,0 +1,7 @@
+.Menu {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--midground-color);
+  padding: 2px;
+  box-shadow: var(--bezel);
+}

@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --background-color: #23232a;
+  --midground-color: #484848;
+  --foreground-color: #8b8b8b;
+
+  --select-color: #fff;
+
+  --primary-color: #3b8526;
+  --primary-color-30: rgba(59, 133, 38, 0.3);
+  --primary-color-hover: #50ad2e;
+  --primary-color-hover-30: rgba(52, 165, 53, 0.3);
+  --primary-color-active: #4bbc22;
+  --primary-color-active-30: rgba(42, 100, 28, 0.3);
+  --primary-color-dark: #1d4d13;
+
+  --accent-color: #2e6be5;
+
+  --secondary-color: #d0d1d4;
+  --secondary-color-30: rgba(208, 209, 212, 0.3);
+  --secondary-color-hover: #f4f6f9;
+  --secondary-color-hover-30: rgba(244, 246, 249, 0.3);
+  --secondary-color-active: #ffffff;
+  --secondary-color-active-30: rgba(177, 178, 181, 0.3);
+  --secondary-color-dark: #58585a;
+
+  --success-color: #89ffb2;
+  --warning-color: #fcd58c;
+  --error-color: #ff8383;
+
+  --text-color: #fff;
+  --text-color-invert: #23232a;
+
+  --bezel-color: rgba(0, 0, 0, 0.4);
+  --bezel-color-semi: rgba(128, 128, 128, 0.4);
+  --bezel-color-invert: rgba(255, 255, 255, 0.4);
+
+  --bezel: inset 0px -2px 0px 0px var(--bezel-color),
+    inset -2px 0px 0px 0px var(--bezel-color),
+    inset 0px 2px 0px 0px var(--bezel-color-invert),
+    inset 2px 0px 0px 0px var(--bezel-color-invert);
+  --bezel-invert: inset 0px -2px 0px 0px var(--bezel-color-invert),
+    inset -2px 0px 0px 0px var(--bezel-color-invert),
+    inset 0px 2px 0px 0px var(--bezel-color),
+    inset 2px 0px 0px 0px var(--bezel-color);
+}

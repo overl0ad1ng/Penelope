@@ -1,0 +1,108 @@
+@import "minecraft-ui.css";
+
+.Button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  line-height: 1.5;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--button-text-color);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 0 0 4px 0;
+  border-top-color: transparent;
+  border-bottom-color: var(--button-border-color);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  background-color: var(--button-bg-color);
+  background-clip: padding-box;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  font-family: Minecraft, Minercraftory;
+  box-shadow: var(--bezel);
+}
+
+.Button:not(.Button_disabled):hover {
+  background-color: var(--button-bg-hover-color);
+}
+
+.Button_active:not(.Button_disabled):hover,
+.Button:not(.Button_disabled):active:hover {
+  border-bottom-color: var(--button-bg-hover-color);
+}
+
+.Button:not(.Button_disabled):focus {
+  outline: none;
+}
+
+.Button:not(.Button_disabled):focus::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 8px);
+  box-shadow: inset 0 0 0 1px var(--text-color);
+}
+
+.Button_active:not(.Button_disabled):after,
+.Button:not(.Button_disabled):active::after {
+  display: none;
+}
+
+.Button_active:not(.Button_disabled),
+.Button:not(.Button_disabled):active {
+  border-bottom-color: transparent;
+  outline: none;
+  border-width: 4px 0 0;
+  border-bottom-color: var(--button-bg-color);
+  background-color: var(--button-bg-active-color);
+  box-shadow: var(--bezel-invert);
+}
+
+.Button_disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.Button_primary {
+  box-shadow: var(--bezel);
+  --button-bg-color: var(--primary-color);
+  --button-bg-hover-color: var(--primary-color-hover);
+  --button-bg-active-color: var(--primary-color-active);
+  --button-text-color: var(--text-color);
+  --button-text-hover-color: var(--text-color);
+  --button-text-active-color: var(--text-color);
+  --button-border-color: var(--primary-color-dark);
+}
+
+.Button_clear {
+  --button-bg-color: transparent;
+  --button-bg-hover-color: rgba(244, 246, 249, 0.2);
+  --button-bg-active-color: rgba(244, 246, 249, 0.1);
+  --button-text-color: var(--text-color);
+  --button-text-hover-color: var(--text-color);
+  --button-text-active-color: var(--text-color);
+  --button-border-color: transparent;
+}
+
+.Button_clear:focus::after {
+  top: -1px;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+}
+
+.Button_secondary {
+  --button-border-color: var(--secondary-color-dark);
+  --button-bg-color: var(--secondary-color);
+  --button-bg-hover-color: var(--secondary-color-hover);
+  --button-bg-active-color: var(--secondary-color-active);
+  --button-text-color: var(--text-color-invert);
+  --button-text-hover-color: var(--text-color-invert);
+  --button-text-active-color: var(--text-color-invert);
+}

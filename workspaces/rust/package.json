@@ -1,0 +1,9 @@
+{
+  "name": "penelope-resize",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Penelope 的图片缩放 WASM 模块（Rust + wasm-bindgen）",
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --out-dir ../../public/wasm --out-name resize --release"
+  }
+}

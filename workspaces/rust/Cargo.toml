@@ -1,0 +1,22 @@
+[package]
+name = "penelope-resize"
+version = "0.1.0"
+edition = "2021"
+description = "Penelope 的图片缩放 WASM 模块（Rust + wasm-bindgen）"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+console_error_panic_hook = "0.1"
+# 生成 Litematica 投影文件（NBT/gzip 序列化交给 rustmatica）
+rustmatica = { version = "0.5.2", default-features = false }
+mcdata = { version = "0.4.0", features = ["serde"] }
+# 按需开启图片格式解码/编码，避免把不需要的解码器编译进 WASM，控制体积。
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1

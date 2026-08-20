@@ -1,0 +1,13 @@
+.Dropdown {
+  z-index: 999;
+  display: none;
+}
+
+.DropdownTarget {
+  cursor: pointer;
+  font-family: Minecraft, Minercraftory;
+}
+
+.Dropdown_visible {
+  display: initial;
+}

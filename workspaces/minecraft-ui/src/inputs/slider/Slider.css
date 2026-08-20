@@ -1,0 +1,105 @@
+.Slider {
+  --slider-rail-bg-color: var(--secondary-color);
+  --slider-rail-bg-hover-color: var(--secondary-color-hover);
+  --slider-rail-bg-active-color: var(--secondary-color-active);
+  --slider-rail-fill-color: var(--primary-color);
+  --slider-tooltip-pixel-size: 4px;
+  --slider-tooltip-bg-color: var(--accent-color);
+  width: 100%;
+  padding: 8px 16px;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.Slider:hover {
+  --slider-rail-fill-color: var(--primary-color-hover);
+}
+
+.Slider_active:hover {
+  --slider-rail-fill-color: var(--primary-color-active);
+}
+
+.SliderRail {
+  height: 8px;
+  position: relative;
+  width: 100%;
+  background-color: var(--slider-rail-bg-color);
+  box-shadow: var(--bezel);
+}
+
+.SliderTooltip {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  transform: translate3d(-50%, -100%, 0);
+  top: calc(0px - 16px);
+  position: absolute;
+}
+.SliderTooltipWrapper {
+  box-sizing: border-box;
+  display: flex;
+  background-color: var(--slider-tooltip-bg-color);
+  padding: 0 calc(var(--slider-tooltip-pixel-size) * 3);
+  margin-bottom: calc(var(--tooltip-pixel-size) * 2);
+  font-family: Minecraft, Minercraftory;
+  clip-path: polygon(
+    0% var(--slider-tooltip-pixel-size),
+    var(--slider-tooltip-pixel-size) var(--slider-tooltip-pixel-size),
+    var(--slider-tooltip-pixel-size) 0%,
+    calc(100% - var(--slider-tooltip-pixel-size)) 0%,
+    calc(100% - var(--slider-tooltip-pixel-size)) var(--slider-tooltip-pixel-size),
+    100% var(--slider-tooltip-pixel-size),
+    100% calc(100% - var(--slider-tooltip-pixel-size)),
+    calc(100% - var(--slider-tooltip-pixel-size)) calc(100% - var(--slider-tooltip-pixel-size)),
+    calc(100% - var(--slider-tooltip-pixel-size)) 100%,
+    var(--slider-tooltip-pixel-size) 100%,
+    var(--slider-tooltip-pixel-size) calc(100% - var(--slider-tooltip-pixel-size)),
+    0% calc(100% - var(--slider-tooltip-pixel-size))
+  );
+}
+
+.SliderTooltip:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  width: calc(var(--slider-tooltip-pixel-size) * 3);
+  height: calc(var(--slider-tooltip-pixel-size) * 2);
+  background-color: var(--slider-tooltip-bg-color);
+  clip-path: polygon(
+    40% 100%,
+    60% 100%,
+    60% 66%,
+    80% 66%,
+    80% 33%,
+    100% 33%,
+    100% 0%,
+    0% 0%,
+    0% 33%,
+    20% 33%,
+    20% 66%,
+    40% 66%
+  );
+}
+
+.Slider_focus .SliderTooltip,
+.Slider:hover .SliderTooltip {
+  opacity: 1;
+}
+
+.Slider .Button {
+  position: absolute;
+  top: 50%;
+  transform: translate3d(-50%, calc(-50% - 2px), 0);
+  height: 20px;
+  width: 20px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.Slider:hover,
+.Slider_focus,
+.Slider_dragging {
+  --slider-rail-bg-color: var(--secondary-color-hover);
+}

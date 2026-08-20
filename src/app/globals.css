@@ -1,118 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  --background: #05060a;
+  --background: #171615;
+  --layer: #3D3938;
   --foreground: #e8eaf0;
 }
 
+@font-face {
+    font-family: 'Minercraftory';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Minercraftory'), url('https://fonts.cdnfonts.com/s/46126/Minercraftory.woff') format('woff');
+}
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-cinzel);
+    --color-layer: var(--layer);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-noto-sans);
+    --font-display: var(--font-cinzel);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
 
-/* ---------- decorative layers ---------- */
-
-/* Faint pixel grid, fading out toward the edges. */
-.grid-floor {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 85% 75% at 50% 42%, black 25%, transparent 78%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 42%, black 25%, transparent 78%);
+.noto-sans {
+    font-family: var(--font-sans), sans-serif;
+    font-weight: 800;
 }
 
-/* Large blurred glows drifting in the void. */
-.orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(64px);
-  animation: drift 22s ease-in-out infinite;
-}
-
-/* Dust motes rising through the dark. */
-.dust {
-  position: absolute;
-  bottom: -6px;
-  border-radius: 9999px;
-  background: #cbd5e1;
-  box-shadow: 0 0 10px 1px rgba(203, 213, 225, 0.35);
-  opacity: 0;
-  animation: rise var(--dur, 28s) linear infinite;
-  animation-delay: var(--delay, 0s);
-}
-
-/* Film grain, for a less sterile look. */
-.noise {
-  position: absolute;
-  inset: 0;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Entrance animation. */
-.fade-up {
-  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(46px, -34px) scale(1.08);
-  }
-  66% {
-    transform: translate(-34px, 26px) scale(0.94);
-  }
-}
-
-@keyframes rise {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  8% {
-    opacity: var(--op, 0.2);
-  }
-  85% {
-    opacity: var(--op, 0.2);
-  }
-  100% {
-    transform: translateY(-105vh);
-    opacity: 0;
-  }
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orb,
-  .dust {
-    animation: none;
-  }
-  .fade-up {
-    animation-duration: 0.01s;
-  }
+.mc {
+    font-family: 'Minercraftory', sans-serif;
 }

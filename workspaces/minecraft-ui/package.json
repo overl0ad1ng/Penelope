@@ -1,0 +1,34 @@
+{
+  "name": "minecraft-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minecraft 风格的 React UI 组件库",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "files": ["src"],
+  "scripts": {
+    "build:css": "postcss src/styles/minecraft-ui.css -o dist/minecraft-ui.css"
+  },
+  "dependencies": {
+    "classnames": "^2"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "postcss": "^8",
+    "postcss-cli": "^11",
+    "postcss-import": "^16",
+    "postcss-mixins": "^10",
+    "typescript": "^5"
+  }
+}

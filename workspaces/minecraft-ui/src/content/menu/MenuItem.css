@@ -1,0 +1,17 @@
+.MenuItem {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem 1.5rem 0.5rem 1rem;
+  width: 100%;
+  cursor: pointer;
+  font-family: Minecraft, Minercraftory;
+}
+
+.MenuItem:hover {
+  background-color: var(--foreground-color);
+}
+
+.MenuItem_disabled {
+  opacity: 0.4;
+  cursor: default;
+}

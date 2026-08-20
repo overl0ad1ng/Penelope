@@ -1,0 +1,28 @@
+.Select {
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+}
+
+.SelectValue {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.SelectActions {
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  align-items: center;
+  padding: 2px;
+}
+
+.SelectAction {
+  height: 100%;
+  min-width: 36px;
+}
