@@ -51,8 +51,11 @@ jobs:
       - name: Build WASM module
         run: pnpm build:wasm
 
-      - name: Build Next.js app
-        run: pnpm build
+      - name: Build with Vercel (runs next build, produces .vercel/output)
+        run: npx vercel build --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Deploy to Vercel
         run: npx vercel deploy --prebuilt --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
