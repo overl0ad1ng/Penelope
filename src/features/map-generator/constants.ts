@@ -13,6 +13,8 @@ export type Dither = "floyd-steinberg" | "atkinson" | "bayer-4x4";
 export type Algorithm =
   | "euclidean"
   | "manhattan"
+  | "hsl-atkinson"
+  | "hsl-bayer"
   | "weighted-euclidean"
   | "redmean";
 

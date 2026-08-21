@@ -19,6 +19,14 @@ const algorithmOptions: ComponentProps<typeof Select>["options"] = [
   { label: "曼哈顿距离", value: "manhattan" },
   { label: "加权欧式距离", value: "weighted-euclidean" },
   { label: "Redmean 距离", value: "redmean" },
+  {
+    label: "HSL Atkinson（配 Atkinson）",
+    value: "hsl-atkinson",
+  },
+  {
+    label: "HSL Bayer（配 4×4 Bayer）",
+    value: "hsl-bayer",
+  },
 ];
 
 interface ConfigSectionProps {
@@ -169,7 +177,16 @@ export default function ConfigSection({
               <Tooltip
                 trigger="hover"
                 placement="top-start"
-                content="在颜色很多的情况下，不同的算法可能会有不同的画面鲜艳程度。不过绝大部分情况，16 色地毯并不能够凸显不同算法的效果。默认配置 Redmean 算法最快，通常不需要修改。"
+                content={
+                  <>
+                    <p>
+                      在颜色很多的情况下，不同的算法可能会有不同的画面鲜艳程度。不过绝大部分情况，16 色地毯并不能够凸显不同算法的效果。
+                    </p>
+                    <p>
+                      默认配置 Redmean 算法最快，通常不需要修改。当颜色
+                    </p>
+                  </>
+                }
               >
                 <CircleQuestion className="size-3.5 text-neutral-400" />
               </Tooltip>

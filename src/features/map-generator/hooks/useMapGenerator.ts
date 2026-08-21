@@ -25,11 +25,11 @@ export function useMapGenerator() {
   );
   const [dither, setDither] = useLocalStorage<Dither>(
     "penelope.map-generator.dither",
-    "floyd-steinberg",
+    "atkinson",
   );
   const [algorithm, setAlgorithm] = useLocalStorage<Algorithm>(
     "penelope.map-generator.algorithm",
-    "redmean",
+    "hsl-atkinson",
   );
   const [enhance, setEnhance] = useLocalStorage<number>(
     "penelope.map-generator.enhance",
@@ -66,6 +66,17 @@ export function useMapGenerator() {
     if (multi !== heightMulti) setHeight(PIXELART[multi].MIN);
 
     setHeightMulti(multi);
+  }
+
+  // 两个 HSL 加权算法各自针对搭档抖动调参，选中时顺带切到对应抖动
+  function handleAlgorithmChange(algorithm: Algorithm) {
+    setAlgorithm(algorithm);
+
+    if (algorithm === "hsl-atkinson") {
+      setDither("atkinson");
+    } else if (algorithm === "hsl-bayer") {
+      setDither("bayer-4x4");
+    }
   }
 
   function clearResult() {
@@ -145,7 +156,7 @@ export function useMapGenerator() {
     dither,
     setDither,
     algorithm,
-    setAlgorithm,
+    handleAlgorithmChange,
     enhance,
     setEnhance,
     sliceCols: getSliceCount(width, widthMulti),

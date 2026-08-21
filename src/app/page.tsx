@@ -12,6 +12,7 @@ import {
   useImageUpload,
   useMapGenerator,
 } from "@/features/map-generator";
+import GuideSection from "@/features/map-generator/components/GuideSection";
 
 export default function Home() {
   const [option, setOption] = useState<Options>("upload");
@@ -78,10 +79,12 @@ export default function Home() {
           dither={generator.dither}
           algorithm={generator.algorithm}
           onDitherChange={generator.setDither}
-          onAlgorithmChange={generator.setAlgorithm}
+          onAlgorithmChange={generator.handleAlgorithmChange}
           enhance={generator.enhance}
           onEnhanceChange={generator.setEnhance}
         />
+
+        <GuideSection />
 
         <InfoSection
           imageInfo={upload.imageInfo}

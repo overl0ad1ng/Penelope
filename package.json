@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm run build:wasm && next dev",
-    "build": "pnpm run build:wasm && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
