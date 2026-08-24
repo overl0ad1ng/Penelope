@@ -1,7 +1,9 @@
-import { Button, Input, Select, Slider, Switch, Tooltip } from "minecraft-ui";
+import { Button, Checkbox, Input, Select, Slider, Switch, Tooltip } from "minecraft-ui";
 import type { ComponentProps } from "react";
 import CircleQuestion from "@/icons/CircleQuestion";
 import type { Algorithm, Dither, Multi } from "../constants";
+import Collapsed from "@/components/Collapsed";
+import allBlocks from "../../../../data/blocksArt.json";
 
 const multiOptions: ComponentProps<typeof Select>["options"] = [
   { label: "像素", value: "x1" },
@@ -29,6 +31,18 @@ const algorithmOptions: ComponentProps<typeof Select>["options"] = [
   },
 ];
 
+/** 根据 bclass 中所有 name_eng 在 blocks 中的命中情况计算 checked 状态。 */
+function getChecked(
+  nameEngs: string[],
+  selected: Set<string>,
+): "all" | "indeterminate" | "none" {
+  let hit = 0;
+  for (const n of nameEngs) if (selected.has(n)) hit++;
+  if (hit === nameEngs.length) return "all";
+  if (hit === 0) return "none";
+  return "indeterminate";
+}
+
 interface ConfigSectionProps {
   width: number;
   height: number;
@@ -51,6 +65,8 @@ interface ConfigSectionProps {
   onAlgorithmChange: (value: Algorithm) => void;
   enhance: number;
   onEnhanceChange: (value: number) => void;
+  blocks: string[];
+  setBlocks: (val: string[]) => void;
 }
 
 export default function ConfigSection({
@@ -75,7 +91,14 @@ export default function ConfigSection({
   onAlgorithmChange,
   enhance,
   onEnhanceChange,
+  blocks,
+  setBlocks,
 }: ConfigSectionProps) {
+  const blocksSet = new Set(blocks);
+  const selectedBnames = allBlocks
+    .filter((cls) => cls.bclass.some((b) => blocksSet.has(b.name_eng)))
+    .map((cls) => cls.bname);
+
   return (
     <div className="space-y-2 mt-8">
       <div className="flex items-center justify-between">
@@ -239,6 +262,101 @@ export default function ConfigSection({
           </div>
 
           <Switch value={slice} onChange={onSliceChange} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-1">
+            <Collapsed
+              arrow="end"
+              title={
+                <div className="flex items-center gap-1">
+                  <p className="text-xs text-neutral-400 noto-sans">方块 Blocks</p>
+                  <p className="text-xs text-neutral-400 noto-sans">
+                    {selectedBnames.length > 0
+                      ? `（${selectedBnames.join("、")}，共${blocks.length}种）`
+                      : `（共${blocks.length}种）`}
+                  </p>
+                  <Tooltip
+                    trigger="hover"
+                    placement="top-start"
+                    content={
+                      <>
+                        <p>
+                          您可以选择不同的方块类型，默认是所有地毯，可以使用地图画机轻松挂机。
+                        </p>
+                        <p>
+                          更多的方块可以更好的实现原画的色彩，不过不使用地毯的地图画建造难度会指数级增长。过多的方块可能会让生成时长变得更长。
+                        </p>
+                      </>
+                    }
+                  >
+                    <CircleQuestion className="size-3.5 text-neutral-400" />
+                  </Tooltip>
+                </div>
+              }
+            >
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 select-none">
+                {allBlocks.map((cls) => {
+                  const nameEngs = cls.bclass.map((b) => b.name_eng);
+
+                  return (
+                    <Collapsed
+                      key={cls.bname_eng}
+                      checked={getChecked(nameEngs, blocksSet)}
+                      onCheckedChange={(val) => {
+                        if (val) {
+                          const next = new Set(blocks);
+                          for (const n of nameEngs) next.add(n);
+                          setBlocks([...next]);
+                        } else {
+                          const remove = new Set(nameEngs);
+                          setBlocks(blocks.filter((b) => !remove.has(b)));
+                        }
+                      }}
+                      arrow="end"
+                      title={
+                        <p className="text-neutral-400 noto-sans">{cls.bname}</p>
+                      }
+                    >
+                      <div className="grid grid-cols-2 gap-2">
+                        {cls.bclass.map((entry) => (
+                          <div
+                            key={entry.name_eng}
+                            className="flex items-center gap-2"
+                          >
+                            <Checkbox
+                              value={blocksSet.has(entry.name_eng)}
+                              onChange={(val) => {
+                                if (val) {
+                                  if (!blocks.includes(entry.name_eng)) {
+                                    setBlocks([...blocks, entry.name_eng]);
+                                  }
+                                } else {
+                                  setBlocks(
+                                    blocks.filter((b) => b !== entry.name_eng),
+                                  );
+                                }
+                              }}
+                            />
+                            <div
+                              className="size-4! inline-block"
+                              style={{
+                                backgroundImage: "url('/assets/BlockCSS.png')",
+                                backgroundPosition: entry.offset,
+                              }}
+                            />
+                            <p className="text-sm text-neutral-300 noto-sans">
+                              {entry.name}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </Collapsed>
+                  );
+                })}
+              </div>
+            </Collapsed>
+          </div>
         </div>
       </div>
     </div>

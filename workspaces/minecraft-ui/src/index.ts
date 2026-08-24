@@ -10,6 +10,7 @@ export { default as Input } from "./inputs/input";
 export { default as Select } from "./inputs/select";
 export { default as Switch } from "./inputs/switch";
 export { default as Slider } from "./inputs/slider";
+export { default as Checkbox } from "./inputs/checkbox";
 
 /* layers */
 export { default as Tooltip } from "./layers/tooltip";

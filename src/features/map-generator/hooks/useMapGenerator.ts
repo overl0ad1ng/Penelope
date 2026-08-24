@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { downloadBytes } from "@/lib/download";
-import { exportLitematic, mapArt } from "@/lib/mapArt";
+import { clearCache, exportLitematic, mapArt } from "@/lib/mapArt";
 import type { Algorithm, Dither, Multi } from "../constants";
 import {
   getSliceCount,
@@ -9,6 +9,15 @@ import {
   normalizeDimension,
   PIXELART,
 } from "../constants";
+import allBlocks from "../../../../data/blocksArt.json";
+
+/** name_eng → 中文 name 的查找表，供方块使用统计结果映射为展示名用。 */
+const BLOCK_STATS = new Map<string, { name: string, offset: string }>();
+for (const cls of allBlocks) {
+  for (const entry of cls.bclass) {
+    BLOCK_STATS.set(entry.name_eng, { name: entry.name, offset: entry.offset });
+  }
+}
 
 /**
  * 地图画生成相关状态：宽高配置、生成结果、生成中标记。
@@ -35,9 +44,17 @@ export function useMapGenerator() {
     "penelope.map-generator.enhance",
     0,
   );
+  const [blocks, setBlocks] = useLocalStorage<string[]>(
+    "penelope.map-generator.blocks",
+    allBlocks.filter(i => i.bname_eng === "carpet")
+      .flatMap(i => i.bclass.map(i => i.name_eng)),
+  )
 
   const [resultUrl, setResultUrl] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [usedBlocks, setUsedBlocks] = useState<{ name: string; length: number, offset: string }[]>(
+    [],
+  );
 
   function handleWidthChange(value: string) {
     setWidth(Number(value.replace(/[^0-9]/g, "")));
@@ -82,7 +99,29 @@ export function useMapGenerator() {
   function clearResult() {
     if (resultUrl) URL.revokeObjectURL(resultUrl);
     setResultUrl(null);
+    setUsedBlocks([]);
   }
+
+  // 任意参数变化时，清除预览结果和 WASM prepare 缓存，
+  // 确保下次生成 / 导出使用最新参数。
+  useEffect(() => {
+    setResultUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return null;
+    });
+    setUsedBlocks([]);
+    clearCache();
+  }, [
+    width,
+    height,
+    widthMulti,
+    heightMulti,
+    slice,
+    dither,
+    algorithm,
+    enhance,
+    blocks,
+  ]);
 
   function generate(file: File | null) {
     if (!file) {
@@ -96,8 +135,24 @@ export function useMapGenerator() {
     );
 
     setGenerating(true);
-    mapArt(file, w, h, dither, algorithm, enhance)
-      .then(setResultUrl)
+    mapArt(file, w, h, dither, algorithm, enhance, blocks)
+      .then(({ url, blocks: stats }) => {
+        setResultUrl(url);
+        setUsedBlocks(
+          stats.map((s) => {
+            const stat = BLOCK_STATS.get(s.name_eng)!;
+
+            if (!stat) {
+              throw new Error(`BLOCK_STATS 非法参数：${s.name_eng}`);
+            }
+
+            return {
+              length: s.length,
+              ...stat
+            };
+          }),
+        );
+      })
       .catch((error) => {
         console.error("地图画生成失败", error);
         alert("地图画生成失败，请查看控制台获取更多信息");
@@ -116,6 +171,7 @@ export function useMapGenerator() {
       normalizeDimension(height, heightMulti),
     );
 
+    setGenerating(true);
     try {
       const bytes = await exportLitematic(
         file,
@@ -125,6 +181,7 @@ export function useMapGenerator() {
         algorithm,
         slice,
         enhance,
+        blocks,
       );
       const filename = slice ? "mapart.zip" : "mapart.litematic";
       const mime = slice ? "application/zip" : "application/octet-stream";
@@ -132,6 +189,8 @@ export function useMapGenerator() {
     } catch (error) {
       console.error("导出失败", error);
       alert("导出失败，请查看控制台获取更多信息");
+    } finally {
+      setGenerating(false);
     }
   }
 
@@ -141,6 +200,7 @@ export function useMapGenerator() {
     widthMulti,
     heightMulti,
     resultUrl,
+    usedBlocks,
     generating,
     handleWidthChange,
     handleHeightChange,
@@ -161,5 +221,7 @@ export function useMapGenerator() {
     setEnhance,
     sliceCols: getSliceCount(width, widthMulti),
     sliceRows: getSliceCount(height, heightMulti),
+    blocks,
+    setBlocks
   };
 }

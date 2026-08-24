@@ -1,43 +1,28 @@
 use mcdata::{util::BlockPos, GenericBlockState};
 use rustmatica::Region;
 
-use crate::palette::CARPETS;
+use crate::palette::{self, BlockDef};
 
-/// 16 种地毯对应的 Minecraft 方块 ID，与 palette::CARPETS 顺序一致。
-const CARPET_IDS: [&str; 16] = [
-    "minecraft:white_carpet",
-    "minecraft:orange_carpet",
-    "minecraft:magenta_carpet",
-    "minecraft:light_blue_carpet",
-    "minecraft:yellow_carpet",
-    "minecraft:lime_carpet",
-    "minecraft:pink_carpet",
-    "minecraft:gray_carpet",
-    "minecraft:light_gray_carpet",
-    "minecraft:cyan_carpet",
-    "minecraft:purple_carpet",
-    "minecraft:blue_carpet",
-    "minecraft:brown_carpet",
-    "minecraft:green_carpet",
-    "minecraft:red_carpet",
-    "minecraft:black_carpet",
-];
-
-/// 把调色板索引映射为对应的地毯方块状态。
-fn carpet_block_state(index: usize) -> GenericBlockState {
+/// 把方块 ID 构造为 GenericBlockState（无额外方块状态属性）。
+fn block_state(block_id: &'static str) -> GenericBlockState {
     GenericBlockState {
-        name: CARPET_IDS[index].into(),
+        name: block_id.into(),
         properties: Default::default(),
     }
 }
 
-fn palette_index(color: &[u8; 3]) -> usize {
-    CARPETS.iter().position(|c| c == color).unwrap_or(0)
-}
-
 /// 构建一个 Litematica 投影（gzip 压缩的 NBT），返回文件字节。
 /// 投影平铺在地面（Size = width × 1 × height）。
-pub fn build_projection(name: &str, colors: &[[u8; 3]], width: usize, height: usize) -> Vec<u8> {
+///
+/// colors 为每个像素的 normal 颜色，palette 用于把颜色反查为 Minecraft 方块 ID。
+/// 重复颜色取调色板中靠前者。
+pub fn build_projection(
+    name: &str,
+    colors: &[[u8; 3]],
+    palette: &[BlockDef],
+    width: usize,
+    height: usize,
+) -> Vec<u8> {
     let mut region: Region = Region::new(
         name.to_owned(),
         BlockPos::new(0, 0, 0),
@@ -49,11 +34,8 @@ pub fn build_projection(name: &str, colors: &[[u8; 3]], width: usize, height: us
     // 图片左列 → x=0（西）。即 block(x, 0, z) = pixel(x, z)，不做镜像/翻转。
     for z in 0..height {
         for x in 0..width {
-            let idx = palette_index(&colors[z * width + x]);
-            region.set_block(
-                BlockPos::new(x as i32, 0, z as i32),
-                carpet_block_state(idx),
-            );
+            let id = palette::block_id_of(&colors[z * width + x], palette);
+            region.set_block(BlockPos::new(x as i32, 0, z as i32), block_state(id));
         }
     }
 
@@ -143,6 +125,7 @@ fn crc32(data: &[u8]) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::palette::CARPETS;
     use mcdata::util::BlockPos;
     use rustmatica::Litematic;
 
@@ -155,7 +138,7 @@ mod tests {
             [21, 21, 21],    // black
             [153, 65, 186],  // magenta
         ];
-        let bytes = build_projection("Test", &colors, 2, 2);
+        let bytes = build_projection("Test", &colors, CARPETS, 2, 2);
 
         // gzip magic
         assert_eq!(&bytes[0..2], &[0x1f, 0x8b]);
@@ -168,19 +151,19 @@ mod tests {
         // 图片行 0（顶部）→ z=0（北），图片左列 → x=0（西），不做镜像/翻转
         assert_eq!(
             region.get_block(BlockPos::new(0, 0, 0)),
-            &carpet_block_state(0) // white（左上）
+            &block_state("minecraft:white_carpet") // white（左上）
         );
         assert_eq!(
             region.get_block(BlockPos::new(1, 0, 0)),
-            &carpet_block_state(1) // orange（右上）
+            &block_state("minecraft:orange_carpet") // orange（右上）
         );
         assert_eq!(
             region.get_block(BlockPos::new(0, 0, 1)),
-            &carpet_block_state(15) // black（左下）
+            &block_state("minecraft:black_carpet") // black（左下）
         );
         assert_eq!(
             region.get_block(BlockPos::new(1, 0, 1)),
-            &carpet_block_state(2) // magenta（右下）
+            &block_state("minecraft:magenta_carpet") // magenta（右下）
         );
     }
 }

@@ -1,5 +1,5 @@
 use crate::algorithm::ColorDistance;
-use crate::palette::nearest_carpet;
+use crate::palette::{nearest, BlockDef};
 
 use super::{add_error, Ditherer};
 
@@ -13,8 +13,9 @@ impl Ditherer for FloydSteinberg {
         _x: usize,
         _y: usize,
         distance: &dyn ColorDistance,
+        palette: &[BlockDef],
     ) -> [u8; 3] {
-        nearest_carpet(color, distance)
+        nearest(color, distance, palette)
     }
 
     fn diffuse(

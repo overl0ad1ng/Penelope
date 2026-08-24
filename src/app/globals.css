@@ -2,23 +2,56 @@
 
 :root {
   --background: #171615;
-  --layer: #3D3938;
+  --layer: #3d3938;
   --foreground: #e8eaf0;
+
+  --mc-arrow__down_clip-path: polygon(
+    0% 0%,
+    0% 25%,
+    14.286% 25%,
+    14.286% 50%,
+    28.572% 50%,
+    28.572% 75%,
+    42.858% 75%,
+    42.858% 100%,
+    57.142% 100%,
+    57.142% 75%,
+    71.428% 75%,
+    71.428% 50%,
+    85.714% 50%,
+    85.714% 25%,
+    100% 25%,
+    100% 0%,
+    85.714% 0%,
+    85.714% 25%,
+    71.428% 25%,
+    71.428% 50%,
+    57.142% 50%,
+    57.142% 75%,
+    42.858% 75%,
+    42.858% 50%,
+    28.572% 50%,
+    28.572% 25%,
+    14.286% 25%,
+    14.286% 0%
+  );
 }
 
 @font-face {
-    font-family: 'Minercraftory';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Minercraftory'), url('https://fonts.cdnfonts.com/s/46126/Minercraftory.woff') format('woff');
+  font-family: "Minercraftory";
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local("Minercraftory"),
+    url("https://fonts.cdnfonts.com/s/46126/Minercraftory.woff") format("woff");
 }
 
 @theme inline {
-    --color-layer: var(--layer);
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-noto-sans);
-    --font-display: var(--font-cinzel);
+  --color-layer: var(--layer);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-noto-sans);
+  --font-display: var(--font-cinzel);
 }
 
 body {
@@ -27,10 +60,36 @@ body {
 }
 
 .noto-sans {
-    font-family: var(--font-sans), sans-serif;
-    font-weight: 800;
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 800;
 }
 
 .mc {
-    font-family: 'Minercraftory', sans-serif;
+  font-family: "Minercraftory", sans-serif;
+}
+
+/* 像素风向下箭头：用 --mc-arrow__down_clip-path 切出形状，靠 data-open 切换旋转方向。
+   收起（data-open="false"）指向右侧，展开（data-open="true"）指向下方。
+   尺寸跟随当前字号（em），颜色取 currentColor。 */
+.mc-arrow {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mc-arrow::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 8px;
+  flex-basis: 14px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  background: currentColor;
+  clip-path: var(--mc-arrow__down_clip-path);
+  transform: rotate(-90deg);
+  transition: transform 150ms ease;
+}
+
+.mc-arrow[data-open="true"]::after {
+  transform: rotate(0deg);
 }

@@ -3,6 +3,7 @@ import DataGrid from "@/components/DataGrid";
 import { getClosestAspectRatio } from "@/lib/aspectRatio";
 import type { ImageInfo, Multi } from "../constants";
 import { MultiToNumeric } from "../constants";
+import Collapsed from "@/components/Collapsed";
 
 interface InfoSectionProps {
   imageInfo: ImageInfo | null;
@@ -10,6 +11,7 @@ interface InfoSectionProps {
   height: number;
   widthMulti: Multi;
   heightMulti: Multi;
+  usedBlocks: { name: string; length: number, offset: string }[];
 }
 
 export default function InfoSection({
@@ -18,6 +20,7 @@ export default function InfoSection({
   height,
   widthMulti,
   heightMulti,
+  usedBlocks,
 }: InfoSectionProps) {
   const aspectRatio = imageInfo ? imageInfo.width / imageInfo.height : null;
 
@@ -43,6 +46,10 @@ export default function InfoSection({
   const slices =
     (widthMulti === "x128" ? width : width / 128) *
     (heightMulti === "x128" ? height : height / 128);
+
+  // 方块统计按列从上到下降序排列，横向最多 5 列：
+  // 行数取 ceil(数量 / 5)，配合列优先填充可保证列数 ≤ 5
+  const blockRows = Math.ceil(usedBlocks.length / 5);
 
   const schematicData: DataGridItem[] = [
     {
@@ -93,6 +100,43 @@ export default function InfoSection({
 
         <div className="bg-layer p-3">
           <DataGrid data={schematicData} />
+
+          <div className="mt-4 space-y-4">
+            <Collapsed title="使用的方块" arrow="end">
+              {
+                !usedBlocks.length ? (
+                  <span className="text-xs text-neutral-400 noto-sans shrink-0 flex items-center gap-1">
+                    /// 生成后统计
+                  </span>
+                ) : (
+                  <div
+                    className="grid grid-flow-col gap-2"
+                    style={{ gridTemplateRows: `repeat(${blockRows}, auto)` }}
+                  >
+                    {
+                      usedBlocks.map(({ name, length, offset }) => (
+                        <div key={name} className="flex items-center gap-2">
+                          <div
+                            className="size-4! inline-block"
+                            style={{
+                              backgroundImage: "url('/assets/BlockCSS.png')",
+                              backgroundPosition: offset
+                            }}
+                          />
+                          <p className="noto-sans text-neutral-300 text-sm">
+                            {name}
+                          </p>
+                          <p className="text-neutral-400">
+                            {length}
+                          </p>
+                        </div>
+                      ))
+                    }
+                  </div>
+                )
+              }
+            </Collapsed>
+          </div>
         </div>
       </div>
     </div>

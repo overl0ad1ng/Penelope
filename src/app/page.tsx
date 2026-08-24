@@ -82,6 +82,8 @@ export default function Home() {
           onAlgorithmChange={generator.handleAlgorithmChange}
           enhance={generator.enhance}
           onEnhanceChange={generator.setEnhance}
+          blocks={generator.blocks}
+          setBlocks={generator.setBlocks}
         />
 
         <GuideSection />
@@ -92,6 +94,7 @@ export default function Home() {
           height={generator.height}
           widthMulti={generator.widthMulti}
           heightMulti={generator.heightMulti}
+          usedBlocks={generator.usedBlocks}
         />
       </main>
 

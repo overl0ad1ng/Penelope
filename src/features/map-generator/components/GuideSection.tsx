@@ -1,3 +1,5 @@
+import Collapsed from "@/components/Collapsed";
+
 const GUIDE_ROWS = [
   {
     scene: "鲜艳动画 / 漫画 / 游戏截图",
@@ -33,11 +35,7 @@ const GUIDE_ROWS = [
 
 export default function GuideSection() {
   return (
-    <details className="group mt-4">
-      <summary className="cursor-pointer select-none text-sm noto-sans text-neutral-400 hover:text-neutral-200 transition-colors">
-        这么多算法和抖动，我该选哪个？
-      </summary>
-
+    <Collapsed className="group mt-4" title="这么多算法和抖动，我该选哪个？">
       <div className="bg-layer p-3 mt-2 space-y-4 noto-sans text-xs text-neutral-400 leading-relaxed">
         {/* 速查表 */}
         <table className="w-full text-left">
@@ -110,6 +108,6 @@ export default function GuideSection() {
           Atkinson 或 HSL Bayer 时会自动切换到搭档抖动。
         </div>
       </div>
-    </details>
+    </Collapsed>
   );
 }

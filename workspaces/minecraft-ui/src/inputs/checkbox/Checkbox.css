@@ -1,0 +1,88 @@
+:root {
+  --checkbox-bg-color: var(--midground-color);
+  --checkbox-bg-checked-color: var(--primary-color);
+  --checkbox-bg-checked-hover-color: var(--primary-color-hover);
+  --checkbox-text-color: var(--text-color);
+  --checkbox-text-color-30: rgba(255, 255, 255, 0.3);
+
+  --checkbox-text-hover-color: var(--foreground-color);
+}
+
+.Checkbox {
+  width: 16px;
+  height: 16px;
+  background-color: transparent;
+  color: transparent;
+  position: relative;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.Checkbox:focus:not(:active) {
+    box-shadow: var(--bezel-invent);
+}
+
+.Checkbox:before,
+.Checkbox:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+.Checkbox:before {
+  width: 16px;
+  height: 16px;
+  background-color: var(--text-color-invert);
+  box-shadow: var(--bezel-invent);
+}
+
+.Checkbox:after {
+  width: 8px;
+  height: 8px;
+}
+
+.Checkbox:checked:before {
+  background-color: var(--checkbox-bg-checked-color);
+  box-shadow: var(--bezel);
+}
+
+.Checkbox:hover:before {
+  background-color: var(--foreground-color);
+}
+
+.Checkbox:hover:checked:before {
+  background-color: var(--checkbox-bg-checked-hover-color);
+}
+
+.Checkbox:checked:after {
+  background-color: var(--checkbox-text-color);
+  box-shadow: var(--bezel-invent);
+}
+
+.Checkbox:hover:checked:after {
+  background-color: var(--checkbox-text-hover-color);
+}
+
+.Checkbox_indeterminate:after {
+  background-color: var(--checkbox-bg-checked-color);
+  width: 8px;
+  height: 8px;
+  box-shadow: var(--bezel);
+}
+
+.Checkbox_indeterminate:hover:after {
+  background-color: var(--checkbox-bg-checked-hover-color);
+}
+
+.Checkbox[readonly],
+.Checkbox[disabled] {
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.Checkbox[disabled] {
+  opacity: 0.5;
+}

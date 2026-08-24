@@ -1,8 +1,9 @@
 use crate::algorithm::ColorDistance;
+use crate::palette::BlockDef;
 
 /// 抖动算法的统一 trait：每种抖动算法一个独立实现。
 pub trait Ditherer {
-    /// 对一个像素做量化（含抖动），返回量化后的地毯颜色。
+    /// 对一个像素做量化（含抖动），返回量化后方块的 normal 颜色。
     /// 有序抖动（Bayer）会用到 x/y 位置；误差扩散忽略位置，随后在 diffuse 里扩散误差。
     fn quantize(
         &self,
@@ -10,6 +11,7 @@ pub trait Ditherer {
         x: usize,
         y: usize,
         distance: &dyn ColorDistance,
+        palette: &[BlockDef],
     ) -> [u8; 3];
 
     /// 把量化误差扩散到邻近像素（仅误差扩散类算法需要，默认空操作）。
@@ -75,6 +77,7 @@ pub fn apply(
     height: usize,
     distance: &dyn ColorDistance,
     ditherer: &dyn Ditherer,
+    palette: &[BlockDef],
 ) {
     for y in 0..height {
         let reverse = y % 2 == 1;
@@ -82,7 +85,7 @@ pub fn apply(
             let x = if reverse { width - 1 - xi } else { xi };
             let i = (y * width + x) * 3;
             let old = [buf[i], buf[i + 1], buf[i + 2]];
-            let new = ditherer.quantize(&old, x, y, distance);
+            let new = ditherer.quantize(&old, x, y, distance, palette);
 
             buf[i] = new[0] as f32;
             buf[i + 1] = new[1] as f32;
@@ -117,10 +120,22 @@ mod tests {
                 buf.push(v);
             }
         }
-        apply(&mut buf, w, h, distance.as_ref(), ditherer.as_ref());
+        apply(
+            &mut buf,
+            w,
+            h,
+            distance.as_ref(),
+            ditherer.as_ref(),
+            CARPETS,
+        );
         for i in 0..(w * h) {
             let c = [buf[i * 3] as u8, buf[i * 3 + 1] as u8, buf[i * 3 + 2] as u8];
-            assert!(CARPETS.contains(&c), "{} 输出了非调色板颜色 {:?}", name, c);
+            assert!(
+                CARPETS.iter().any(|b| b.normal == c),
+                "{} 输出了非调色板颜色 {:?}",
+                name,
+                c
+            );
         }
     }
 

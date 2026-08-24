@@ -162,20 +162,14 @@ impl ColorDistance for HslBayer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::palette::nearest_carpet;
+    use crate::palette::{nearest, CARPETS};
 
-    fn assert_nearest(
-        distance: &dyn ColorDistance,
-        r: u8,
-        g: u8,
-        b: u8,
-        expected: [u8; 3],
-    ) {
+    fn assert_nearest(distance: &dyn ColorDistance, r: u8, g: u8, b: u8, expected: [u8; 3]) {
         let color = [r as f32, g as f32, b as f32];
-        let nearest = nearest_carpet(&color, distance);
+        let got = nearest(&color, distance, CARPETS);
         assert_eq!(
-            nearest, expected,
-            "输入 ({r},{g},{b}) 期望匹配 {expected:?}，实际 {nearest:?}"
+            got, expected,
+            "输入 ({r},{g},{b}) 期望匹配 {expected:?}，实际 {got:?}"
         );
     }
 
